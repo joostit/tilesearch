@@ -9,6 +9,14 @@ class ToneGenerator(object):
 
     def __init__(self, samplerate=44100, frames_per_buffer=4410):
         self.p = pyaudio.PyAudio()
+        
+        print("")
+        print("")
+        print("DefaultAudio")
+        print(self.p.get_default_input_device_info())
+        print("")
+        print("")
+
         self.samplerate = samplerate
         self.frames_per_buffer = frames_per_buffer
         self.streamOpen = False
