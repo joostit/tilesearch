@@ -41,7 +41,7 @@ class Tone:
         if(wave_type == Waves.Sine):
             smp = np.array((2 ** (abs(self.format) - 1)) * np.sin(xvalues) + addPositive)
         elif (wave_type == Waves.Square):
-            smp = np.array((2 ** (abs(self.format) - 1)) * np.sign(np.sin(xvalues)) * .99 + addPositive)
+            smp = np.array((2 ** (abs(self.format) - 1)) * np.sign(np.sin(xvalues)) * .9 + addPositive)
 
         # if the mixer is configured in stereo we need to copy the sine wave to
         # both left and right channels
@@ -118,58 +118,21 @@ if __name__ == "__main__":
     t = Tone()
 
     t.play(a, 500, Waves.Square);
-    t.play(a, 500, Waves.Sine);
-    t.play(a, 500, Waves.Sine);
-    t.play(f, 350, Waves.Sine);
-    t.play(cH, 150, Waves.Sine);
-    t.play(a, 500, Waves.Sine);
-    t.play(f, 350, Waves.Sine);
-    t.play(cH, 150, Waves.Sine);
-    t.play(a, 650, Waves.Sine);
+    t.play(a, 500, Waves.Square);
+    t.play(a, 500, Waves.Square);
+    t.play(f, 350, Waves.Square);
+    t.play(cH, 150, Waves.Square);
+    t.play(a, 500, Waves.Square);
+    t.play(f, 350, Waves.Square);
+    t.play(cH, 150, Waves.Square);
+    t.play(a, 650, Waves.Square);
 
     time.sleep(0.150)
     # end of first bit
 
-    t.play(eH, 500, Waves.Sine);
-    t.play(eH, 500, Waves.Sine);
-    t.play(eH, 500, Waves.Sine);
-    t.play(fH, 350, Waves.Sine);
-    t.play(cH, 150, Waves.Sine);
-    t.play(gS, 500, Waves.Sine);
-    t.play(f, 350);
-    t.play(cH, 150);
-    t.play(a, 650);
-
-    time.sleep(0.150)
-    # end of second bit...
-
-    t.play(aH, 500, Waves.Sine);
-    t.play(a, 300, Waves.Sine);
-    t.play(a, 150, Waves.Sine);
-    t.play(aH, 400, Waves.Sine);
-    t.play(gSH, 200, Waves.Sine);
-    t.play(gH, 200, Waves.Sine);
-    t.play(fSH, 125, Waves.Sine);
-    t.play(fH, 125, Waves.Sine);
-    t.play(fSH, 250, Waves.Sine);
-
-    time.sleep(0.250)
-
-    t.play(aS, 250, Waves.Sine);
-    t.play(dSH, 400, Waves.Sine);
-    t.play(dH, 200, Waves.Sine);
-    t.play(cSH, 200, Waves.Sine);
-    t.play(cH, 125, Waves.Sine);
-    t.play(b, 125, Waves.Sine);
-    t.play(cH, 250, Waves.Sine);
-
-    time.sleep(0.250)
-
-    t.play(f, 125, Waves.Sine);
-    t.play(gS, 500, Waves.Sine);
-    t.play(f, 375, Waves.Sine);
-    t.play(a, 125, Waves.Sine);
-    t.play(cH, 500, Waves.Sine);
-    t.play(a, 375, Waves.Sine);
-    t.play(cH, 125, Waves.Sine);
-    t.play(eH, 650, Waves.Sine);
+    t.play(eH, 500, Waves.Square);
+    t.play(eH, 500, Waves.Square);
+    t.play(eH, 500, Waves.Square);
+    t.play(fH, 350, Waves.Square);
+    t.play(cH, 150, Waves.Square);
+    t.play(gS, 500, Waves.Square);

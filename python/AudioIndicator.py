@@ -1,28 +1,32 @@
 
 
-from ToneGenerator import ToneGenerator
+from ToneGenerator import ToneGenerator, Waves
 import threading
 import time
+from timeloop import Timeloop
+from datetime import timedelta
 
 class AudioIndicator:
 
-    duration = 0.1
-    amplitude = 1
 
     def __init__(self):
         self.Frequency = 1000
         self.Continue_Running = True
+        self.generator = ToneGenerator()
+        self.tl = Timeloop()
         pass
 
-    def thread_function(self):
+    @tl.job(interval=timedelta(seconds=2))
+    def sample_job_every_2s(self):
+        print
+        "2s job current time : {}".format(time.ctime())
 
-        while self.Continue_Running:
-            print("Playing...")
-            generator = ToneGenerator()
-            generator.play(self.Frequency, self.duration, self.amplitude)
-            time.sleep(1)
+
+    def doBeep(self):
+        print("Beeping...")
+        self.generator.play(1000, 250, Waves.Square)
+        time.sleep(100)
 
 
     def start_indicator(self):
-        audio_thread = threading.Thread(target=self.thread_function, daemon=True)
-        audio_thread.start()
+        self.tl.start(block=False)

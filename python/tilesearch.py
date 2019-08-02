@@ -1,6 +1,6 @@
 from bluepy.btle import Scanner, DefaultDelegate
 
-import AudioIndicator
+from AudioIndicator import AudioIndicator
 
 #import bluetooth
 class ScanDelegate(DefaultDelegate):
@@ -31,6 +31,10 @@ scanner = Scanner().withDelegate(ScanDelegate())
 #devices = scanner.scan(10.0)
 
 while True is True:
+
+    indicator = AudioIndicator();
+    indicator.start_indicator();
+
     scanner.clear()
     scanner.start()
     scanner.process(2)
