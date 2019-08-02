@@ -1,9 +1,7 @@
-from AudioIndicator import AudioIndicator
+import os
 import time
 
-indicator = AudioIndicator()
-indicator.start_indicator()
 
 while True:
-    time.sleep(1000)
-
+    os.system("AUDIODRIVER=alsa AUDIODEV=hw:0,0 play -n -c1 synth 3 sine 1000")
+    time.sleep(2)
