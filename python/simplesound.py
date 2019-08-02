@@ -1,5 +1,12 @@
 import pygame
 import numpy as np
+from enum import Enum
+import math
+
+
+class Waves(Enum):
+    Sine = 1
+    Square = 2
 
 
 class Tone:
@@ -12,24 +19,29 @@ class Tone:
         # load the parameters of the sound card
         self.sample_rate, self.format, self.channels = pygame.mixer.get_init()
 
-    def play(self, freq, period_ms):
+    def play(self, freq, period_ms, wave_type):
         """ Play a tone of specified frequency for a period of time.
             freq = frequency in Hz
-            period_ms = time to play for in millisecods """
+            period_ms = time to play for in milliseconds """
 
         # 2 * pi * freq / sample_rate is the step between samples in radians
         omega = np.pi * 2 * freq / self.sample_rate
 
         # arange returns a vector of values we can multiply by our step value
         # in one step using some of numpys mathematical optimisations
-        xvalues = np.arange(int(self.sample_rate)) * omega
+        xvalues = np.arange(int(self.sample_rate * (period_ms / 1000))) * omega
 
         # the values are scaled -1 to 1 as floating point, but we need to
         # scale them based on the sample format of the sound card
-        if self.format < 0:
-            smp = np.array((2 ** (abs(self.format) - 1)) * np.sin(xvalues))
+        if(self.format < 0):
+            addPositive = 0
         else:
-            smp = np.array((2 ** (abs(self.format) - 1)) * (np.sin(xvalues) + 1))
+            addPositive = 1
+
+        if(wave_type == Waves.Sine):
+            smp = np.array((2 ** (abs(self.format) - 1)) * np.sin(xvalues) + addPositive)
+        elif (wave_type == Waves.Square):
+            smp = np.array((2 ** (abs(self.format) - 1)) * np.sign(np.sin(xvalues)) * .99 + addPositive)
 
         # if the mixer is configured in stereo we need to copy the sine wave to
         # both left and right channels
@@ -79,9 +91,6 @@ class Tone:
 if __name__ == "__main__":
     import time
 
-    pygame.init()
-    pygame.mixer.init()
-
 
     """ demo tune, courtesy of:
         http://processors.wiki.ti.com/index.php/Playing_The_Imperial_March
@@ -108,25 +117,25 @@ if __name__ == "__main__":
 
     t = Tone()
 
-    t.play(a, 500);
-    t.play(a, 500);
-    t.play(a, 500);
-    t.play(f, 350);
-    t.play(cH, 150);
-    t.play(a, 500);
-    t.play(f, 350);
-    t.play(cH, 150);
-    t.play(a, 650);
+    t.play(a, 500, Waves.Square);
+    t.play(a, 500, Waves.Sine);
+    t.play(a, 500, Waves.Sine);
+    t.play(f, 350, Waves.Sine);
+    t.play(cH, 150, Waves.Sine);
+    t.play(a, 500, Waves.Sine);
+    t.play(f, 350, Waves.Sine);
+    t.play(cH, 150, Waves.Sine);
+    t.play(a, 650, Waves.Sine);
 
     time.sleep(0.150)
     # end of first bit
 
-    t.play(eH, 500);
-    t.play(eH, 500);
-    t.play(eH, 500);
-    t.play(fH, 350);
-    t.play(cH, 150);
-    t.play(gS, 500);
+    t.play(eH, 500, Waves.Sine);
+    t.play(eH, 500, Waves.Sine);
+    t.play(eH, 500, Waves.Sine);
+    t.play(fH, 350, Waves.Sine);
+    t.play(cH, 150, Waves.Sine);
+    t.play(gS, 500, Waves.Sine);
     t.play(f, 350);
     t.play(cH, 150);
     t.play(a, 650);
@@ -134,67 +143,33 @@ if __name__ == "__main__":
     time.sleep(0.150)
     # end of second bit...
 
-    t.play(aH, 500);
-    t.play(a, 300);
-    t.play(a, 150);
-    t.play(aH, 400);
-    t.play(gSH, 200);
-    t.play(gH, 200);
-    t.play(fSH, 125);
-    t.play(fH, 125);
-    t.play(fSH, 250);
+    t.play(aH, 500, Waves.Sine);
+    t.play(a, 300, Waves.Sine);
+    t.play(a, 150, Waves.Sine);
+    t.play(aH, 400, Waves.Sine);
+    t.play(gSH, 200, Waves.Sine);
+    t.play(gH, 200, Waves.Sine);
+    t.play(fSH, 125, Waves.Sine);
+    t.play(fH, 125, Waves.Sine);
+    t.play(fSH, 250, Waves.Sine);
 
     time.sleep(0.250)
 
-    t.play(aS, 250);
-    t.play(dSH, 400);
-    t.play(dH, 200);
-    t.play(cSH, 200);
-    t.play(cH, 125);
-    t.play(b, 125);
-    t.play(cH, 250);
+    t.play(aS, 250, Waves.Sine);
+    t.play(dSH, 400, Waves.Sine);
+    t.play(dH, 200, Waves.Sine);
+    t.play(cSH, 200, Waves.Sine);
+    t.play(cH, 125, Waves.Sine);
+    t.play(b, 125, Waves.Sine);
+    t.play(cH, 250, Waves.Sine);
 
     time.sleep(0.250)
 
-    t.play(f, 125);
-    t.play(gS, 500);
-    t.play(f, 375);
-    t.play(a, 125);
-    t.play(cH, 500);
-    t.play(a, 375);
-    t.play(cH, 125);
-    t.play(eH, 650);
-
-    # end of third bit... (Though it doesn't play well)
-    # let's repeat it
-
-    t.play(aH, 500);
-    t.play(a, 300);
-    t.play(a, 150);
-    t.play(aH, 400);
-    t.play(gSH, 200);
-    t.play(gH, 200);
-    t.play(fSH, 125);
-    t.play(fH, 125);
-    t.play(fSH, 250);
-
-    time.sleep(0.250)
-
-    t.play(aS, 250);
-    t.play(dSH, 400);
-    t.play(dH, 200);
-    t.play(cSH, 200);
-    t.play(cH, 125);
-    t.play(b, 125);
-    t.play(cH, 250);
-
-    time.sleep(0.250)
-
-    t.play(f, 250);
-    t.play(gS, 500);
-    t.play(f, 375);
-    t.play(cH, 125);
-    t.play(a, 500);
-    t.play(f, 375);
-    t.play(cH, 125);
-    t.play(a, 650);
+    t.play(f, 125, Waves.Sine);
+    t.play(gS, 500, Waves.Sine);
+    t.play(f, 375, Waves.Sine);
+    t.play(a, 125, Waves.Sine);
+    t.play(cH, 500, Waves.Sine);
+    t.play(a, 375, Waves.Sine);
+    t.play(cH, 125, Waves.Sine);
+    t.play(eH, 650, Waves.Sine);
