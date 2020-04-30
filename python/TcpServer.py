@@ -43,20 +43,35 @@ class TcpServer:
             self.clients.remove(clientToRemove)
 
     def __listener_thread_method(self):
+
+        self.listener = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        host = socket.gethostname()
+        self.listener.bind(('', self.serverport))
+        self.listener.listen(1)
+        print("Started listening om port ", self.serverport)
+
         while self.run:
             try:
-                self.listener = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-                host = socket.gethostname()
-                self.listener.bind(('', self.serverport))
-                self.listener.listen(1)
-                print("Started listening om port ", self.serverport)
                 connection, client_address = self.listener.accept()
                 self.clients.append(connection)
                 print("Client connected from: ", client_address)
-
+                self.handleclient(connection)
             except OSError as exc:
                 if self.run:
                     print("Exception while listening to socket: ", exc)
                     traceback.print_exc()
 
             time.sleep(1)
+
+
+
+    def handleclient(self, client):
+
+        while client.fileno() != -1:
+            data = client.recv(1024)
+            dataString = str(data, 'utf-8')
+            print("Received: " + dataString)
+            client.sendall(("Echoing " + dataString).encode())
+
+        self.clients.remove(client)
+        print("Client disconnected")
